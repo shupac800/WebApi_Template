@@ -25,29 +25,32 @@ namespace WebApi_Template.Controllers
                                 join al in dbContext.Albums
                                 on ar.ArtistId equals al.ArtistId
                                 orderby ar.Name
-                                select new {
+                                select new AlbumArtist
+                                {
                                     ArtistName = ar.Name,
                                     Title = al.Title
                                 });
 
-            var API_Object = queryResults.AsEnumerable().Select(xx => new AlbumArtist {
-                ArtistName = xx.ArtistName,
-                Title = xx.Title
-            });
+            //var API_Object = queryResults.AsEnumerable().Select(xx => new AlbumArtist {
+            //    ArtistName = xx.ArtistName,
+            //    Title = xx.Title
+            //});
+
+            var API_Object = queryResults.ToList();
 
             return API_Object;
         }
 
-        public string mofo(string abc)
+        public string echo(string s)
         {
-            return "I farted " + abc;
+            return "Echo: " + s;
         }
 
-        public IEnumerable<Artist> search(string searchString)
+        public IEnumerable<Artist> searchArtist(string s)
         {
             var queryResults = (from ar in dbContext.Artists
                                 orderby ar.Name
-                                where ar.Name.Contains(searchString)
+                                where ar.Name.Contains(s)
                                 select new Artist
                                 {
                                     Name = ar.Name,
@@ -55,6 +58,21 @@ namespace WebApi_Template.Controllers
                                 });
 
             return queryResults;
+        }
+
+        public IEnumerable<AlbumArtist> artistAlbums(string a)
+        {
+            var queryResults = (from al in dbContext.Albums
+                                join ar in dbContext.Artists on al.ArtistId equals ar.ArtistId
+                                orderby al.Title
+                                where ar.Name.Contains(a)
+                                select new AlbumArtist
+                                {
+                                    ArtistName = ar.Name,
+                                    Title = al.Title
+                                });
+
+            return queryResults.ToList();
         }
     }
 }
