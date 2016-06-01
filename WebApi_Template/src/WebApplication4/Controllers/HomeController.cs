@@ -74,5 +74,24 @@ namespace WebApi_Template.Controllers
 
             return queryResults.ToList();
         }
+
+        public IEnumerable<Concert> concert(string a)
+        {
+            var schedule = new EventList();
+
+            var queryResults = (from ar in dbContext.Artists
+                                join c in schedule.Events
+                                on ar.ArtistId equals c.ArtistId
+                                where ar.Name.Contains(a)
+                                select new Concert
+                                {
+                                    ArtistId = c.ArtistId,
+                                    ArtistName = ar.Name,
+                                    Date = c.Date,
+                                    TourName = c.TourName
+                                });
+
+            return queryResults.ToList();
+        }
     }
 }
