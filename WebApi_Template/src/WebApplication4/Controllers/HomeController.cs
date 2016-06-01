@@ -38,5 +38,23 @@ namespace WebApi_Template.Controllers
             return API_Object;
         }
 
+        public string mofo(string abc)
+        {
+            return "I farted " + abc;
+        }
+
+        public IEnumerable<Artist> search(string searchString)
+        {
+            var queryResults = (from ar in dbContext.Artists
+                                orderby ar.Name
+                                where ar.Name.Contains(searchString)
+                                select new Artist
+                                {
+                                    Name = ar.Name,
+                                    ArtistId = ar.ArtistId
+                                });
+
+            return queryResults;
+        }
     }
 }
